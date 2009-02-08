@@ -41,7 +41,6 @@ class TaskTests(TestCase):
         self.assertEqual([], task1.tags)
         self.assertEqual([], task2.tags)
 
-
     def testGetTasks(self):
         task1 = self.gtd.addTask(title = u'First',  priority = 1)
         task2 = self.gtd.addTask(title = u'Second', priority = 2)
@@ -50,4 +49,14 @@ class TaskTests(TestCase):
         self.assertEqual(2, len(tasks))
         self.assertEqual(task2, tasks[0])
         self.assertEqual(task1, tasks[1])
+
+    def testGetTags(self):
+        self.gtd.addTask(title = u'First', tags = [u'one', u'two', u'three'])
+
+        tags = self.gtd.getTags()
+        tag_titles = [t.title for t in tags]
+
+        self.assertEqual(u'one',   tag_titles[0])
+        self.assertEqual(u'three', tag_titles[1])
+        self.assertEqual(u'two',   tag_titles[2])
 

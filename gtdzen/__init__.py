@@ -1,7 +1,8 @@
-__version__ = '0.1.0'
 import os
 from models import *
 from elixir import metadata, setup_all, create_all, session
+
+__version__ = '0.1.0'
 
 class GTD(object):
     def __init__(self, filename):
@@ -22,6 +23,9 @@ class GTD(object):
 
     def getTasks(self):
         return Task.query.all()
+
+    def getTags(self):
+        return Tag.query.all()
 
     def removeAll(self):
         for task in Task.query.all():
