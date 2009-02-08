@@ -1,4 +1,6 @@
 from elixir import Entity, Field, Unicode, UnicodeText, Integer, Float, ManyToMany, using_options
+from utils import get_or_create
+from pdb import set_trace
 
 class Task(Entity):
     title = Field(Unicode(40))
@@ -13,6 +15,9 @@ class Task(Entity):
 
     def __repr__(self):
         return u'<Task "%s" with tags %s>' % (self.title, ', '.join(map(unicode, self.tags)))
+
+    def setTags(self, tags):
+        self.tags = [get_or_create(Tag, title = tag) for tag in tags]
 
 class Tag(Entity):
     title = Field(Unicode(40), unique = True)

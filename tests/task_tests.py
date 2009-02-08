@@ -100,3 +100,14 @@ class TaskTests(TestCase):
         self.assertEqual(1, len(tasks))
         self.assertEqual(task3, tasks[0])
 
+    def testModify(self):
+        task1 = self.gtd.addTask(title = u'First',  tags = [u'home', u'1 minute'], priority = 1)
+        task1.priority = 5
+        task1.setTags([u'work', u'about hour'])
+
+        task = self.gtd.getTaskById(task1.id)
+        self.assertEqual(5, task.priority)
+        self.assertEqual(2, len(task.tags))
+        self.assertEqual(u'work',       task.tags[0].title)
+        self.assertEqual(u'about hour', task.tags[1].title)
+
