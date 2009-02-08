@@ -6,7 +6,7 @@ class Task(Entity):
     tags = ManyToMany('Tag')
     priority = Field(Float)
 
-    using_options(order_by='-priority')
+    using_options(tablename='tasks', order_by='-priority')
 
     def __str__(self):
         return '"%s" / %s (%s)>' % (self.title, self.priority, ', '.join(map(str, self.tags)))
@@ -18,7 +18,7 @@ class Tag(Entity):
     title = Field(Unicode(40), unique = True)
     tasks = ManyToMany('Task')
 
-    using_options(order_by='title')
+    using_options(tablename='tags', order_by='title')
 
     def __str__(self):
         return self.title

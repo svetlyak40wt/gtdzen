@@ -10,7 +10,7 @@ __version__ = '0.1.0'
 class GTD(object):
     def __init__(self, filename):
         metadata.bind = 'sqlite:///%s' % filename
-        metadata.bind.echo = True
+        #metadata.bind.echo = True
         if not os.path.exists(filename):
             setup_all()
             create_all()
@@ -34,10 +34,12 @@ class GTD(object):
         if isinstance(tags, basestring):
             tags = [tags,]
 
-#        set_trace()
-        tasks_with_tags = [t[0] for t in session.query(Task.id).join(Tag).filter(Tag.title.in_(tags))]
-        new_tags =  Tag.query.filter(Task.id.in_(tasks_with_tags)).filter(not_(Tag.title.in_(tags)))
-        return new_tags
+        tasks = session.query(Task.id).filter(
+                    Task.tags.any(Tag.title.in_(tags)))
+        task_ids = [t[0] for t in tasks]
+        new_tags =  Tag.query.filter(Tag.tasks.any(Task.id.in_(task_ids))) \
+                             .filter(not_(Tag.title.in_(tags)))
+        return new_tags.all()
 
     def removeAll(self):
         for task in Task.query.all():
