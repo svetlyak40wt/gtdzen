@@ -9,10 +9,10 @@ class Task(Entity):
     using_options(tablename='tasks', order_by='-priority')
 
     def __str__(self):
-        return '"%s" / %s (%s)>' % (self.title, self.priority, ', '.join(map(str, self.tags)))
+        return u'"%s" / %s (%s)' % (self.title, self.priority, ', '.join(map(unicode, self.tags)))
 
     def __repr__(self):
-        return '<Task "%s" with tags %s>' % (self.title, ', '.join(map(str, self.tags)))
+        return u'<Task "%s" with tags %s>' % (self.title, ', '.join(map(unicode, self.tags)))
 
 class Tag(Entity):
     title = Field(Unicode(40), unique = True)
@@ -24,5 +24,5 @@ class Tag(Entity):
         return self.title
 
     def __repr__(self):
-        return '<Tag "%s">' % self.title
+        return u'<Tag "%s">' % self.title
 

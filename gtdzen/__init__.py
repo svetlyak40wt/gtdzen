@@ -11,8 +11,8 @@ class GTD(object):
     def __init__(self, filename):
         metadata.bind = 'sqlite:///%s' % filename
         #metadata.bind.echo = True
+        setup_all()
         if not os.path.exists(filename):
-            setup_all()
             create_all()
 
     def addTask(self, title, note = None, tags = [], priority = 1):
