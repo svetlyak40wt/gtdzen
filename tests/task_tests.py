@@ -81,5 +81,22 @@ class TaskTests(TestCase):
             [u'today'],
             [t.title for t in self.gtd.getTagsRelated([u'home', u'1 minute'])])
 
+    def testGetFilteredTasks(self):
+        task1 = self.gtd.addTask(title = u'First',  tags = [u'home', u'1 minute'], priority = 1)
+        task2 = self.gtd.addTask(title = u'Second', tags = [u'work', u'1 minute'], priority = 5)
+        task3 = self.gtd.addTask(title = u'Third', tags = [u'work', u'long'], priority = 3)
 
+        tasks = self.gtd.getTasks(u'1 minute')
+        self.assertEqual(2, len(tasks))
+        self.assertEqual(task2, tasks[0])
+        self.assertEqual(task1, tasks[1])
+
+        tasks = self.gtd.getTasks(u'work')
+        self.assertEqual(2, len(tasks))
+        self.assertEqual(task2, tasks[0])
+        self.assertEqual(task3, tasks[1])
+
+        tasks = self.gtd.getTasks([u'work', u'long'])
+        self.assertEqual(1, len(tasks))
+        self.assertEqual(task3, tasks[0])
 

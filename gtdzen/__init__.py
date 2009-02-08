@@ -2,7 +2,7 @@ import os
 from models import *
 from elixir import metadata, setup_all, create_all, session
 from sqlalchemy.sql import not_
-from utils import get_or_create
+from utils import get_or_create, make_list
 from pdb import set_trace
 
 __version__ = '0.1.0'
@@ -24,15 +24,21 @@ class GTD(object):
         session.commit()
         return task
 
-    def getTasks(self):
-        return Task.query.all()
+    def getTasks(self, tags = []):
+        tags = make_list(tags)
+        query = Task.query
+
+        if len(tags) > 0:
+            for tag in tags:
+                query = query.filter(Task.tags.any(title = tag))
+
+        return query.all()
 
     def getTags(self):
         return Tag.query.all()
 
     def getTagsRelated(self, tags):
-        if isinstance(tags, basestring):
-            tags = [tags,]
+        tags = make_list(tags)
 
         tasks = session.query(Task.id).filter(
                     Task.tags.any(Tag.title.in_(tags)))
