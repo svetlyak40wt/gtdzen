@@ -60,3 +60,26 @@ class TaskTests(TestCase):
         self.assertEqual(u'three', tag_titles[1])
         self.assertEqual(u'two',   tag_titles[2])
 
+    def testAddTwoTasksWithSameTag(self):
+        self.gtd.addTask(title = u'First', tags = [u'today'])
+        self.gtd.addTask(title = u'Second', tags = [u'today'])
+        self.assertEqual(2, len(self.gtd.getTasks()))
+
+    def testGetRelatedTags(self):
+        self.gtd.addTask(title = u'First', tags = [u'today', u'home', u'1 minute'])
+        self.gtd.addTask(title = u'Second', tags = [u'today', u'work', u'call'])
+
+        self.assertEqual(
+            [u'1 minute', u'call', u'home', u'work'],
+            [t.title for t in self.gtd.getTagsRelated(u'today')])
+
+        self.assertEqual(
+            [u'1 minute', u'today'],
+            [t.title for t in self.gtd.getTagsRelated(u'home')])
+
+        self.assertEqual(
+            [u'today'],
+            [t.title for t in self.gtd.getTagsRelated([u'home', u'1 minute'])])
+
+
+
