@@ -6,7 +6,7 @@ from elixir import metadata, setup_all, create_all, session
 class GTD(object):
     def __init__(self, filename):
         metadata.bind = 'sqlite:///%s' % filename
-        metadata.bind.echo = True
+        #metadata.bind.echo = True
         if not os.path.exists(filename):
             setup_all()
             create_all()
@@ -19,6 +19,15 @@ class GTD(object):
             priority = priority)
         session.commit()
         return task
+
+    def getTasks(self):
+        return Task.query.all()
+
+    def removeAll(self):
+        for task in Task.query.all():
+            task.delete()
+        Tag.query.delete()
+        session.commit()
 
     def _createTags(self, tags):
         return [Tag(title = tag) for tag in tags]
