@@ -1,2 +1,2 @@
 check:
-	tests/testsuite.py
+	PYTHONPATH=`pwd` tests/testsuite.py
