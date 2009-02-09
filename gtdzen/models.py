@@ -1,4 +1,4 @@
-from elixir import Entity, Field, Unicode, UnicodeText, Integer, Float, ManyToMany, using_options
+from elixir import *
 from utils import get_or_create
 from pdb import set_trace
 
@@ -7,6 +7,7 @@ class Task(Entity):
     note = Field(UnicodeText)
     tags = ManyToMany('Tag')
     priority = Field(Float)
+    done = Field(Boolean, default = False)
 
     using_options(tablename='tasks', order_by='-priority')
 

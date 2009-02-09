@@ -9,7 +9,8 @@ __version__ = '0.1.0'
 
 class GTD(object):
     def __init__(self, filename):
-        metadata.bind = 'sqlite:///%s' % filename
+        db_url = 'sqlite:///' + filename
+        metadata.bind = db_url
         #metadata.bind.echo = True
         setup_all()
         if not os.path.exists(filename):
