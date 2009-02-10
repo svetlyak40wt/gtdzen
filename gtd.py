@@ -9,6 +9,14 @@ def _comma_split(string):
 
 _parse_tags = _comma_split
 
+def _add_remove_tags(tags):
+    '''This method returns separates tags in two lists.
+       First list contains only those tags with simple names
+       or names with '+' prefix. Second list contains only
+       tags with '-' prefix. Prefixes are stripped.'''
+    return [t.lstrip('+') for t in tags if t[0] != '-'], \
+           [t.lstrip('-') for t in tags if t[0] == '-']
+
 def _parse_ids(ids):
     return map(int, _comma_split(ids))
 
@@ -40,14 +48,23 @@ class CommandUI:
             print u'No tasks'
 
     def cmd_update(self, task_ids, title = None, priority = None, tags = None):
+        if tags is not None:
+            add_tags, remove_tags = _add_remove_tags(_parse_tags(tags))
+
         for task_id in _parse_ids(task_ids):
             task = self.gtd.getTaskById(task_id)
+
             if title is not None:
                 task.title = title
+
             if priority is not None:
                 task.priority = priority
+
             if tags is not None:
-                task.setTags(_parse_tags(tags))
+                new_tags = set(t.title for t in task.tags if t.title not in remove_tags)
+                new_tags.update(add_tags)
+                task.setTags(new_tags)
+
             self.gtd.save(task)
             print u'Task %s was updated' % task
 
