@@ -4,8 +4,13 @@ import os
 import gtdzen
 from pdb import set_trace
 
-def _parse_tags(tags):
-    return [tag for tag in (tag.strip() for tag in tags.split(',')) if tag]
+def _comma_split(string):
+    return [s for s in (s.strip() for s in string.split(',')) if s]
+
+_parse_tags = _comma_split
+
+def _parse_ids(ids):
+    return map(int, _comma_split(ids))
 
 def _process_args(args):
     return [(arg != '-' and arg or None) for arg in (arg.decode('utf-8') for arg in args)]
@@ -34,16 +39,17 @@ class CommandUI:
         else:
             print u'No tasks'
 
-    def cmd_update(self, task_id, title = None, priority = None, tags = None):
-        task = self.gtd.getTaskById(int(task_id))
-        if title is not None:
-            task.title = title
-        if priority is not None:
-            task.priority = priority
-        if tags is not None:
-            task.setTags(_parse_tags(tags))
-        self.gtd.save(task)
-        print u'Task %s was updated' % task
+    def cmd_update(self, task_ids, title = None, priority = None, tags = None):
+        for task_id in _parse_ids(task_ids):
+            task = self.gtd.getTaskById(task_id)
+            if title is not None:
+                task.title = title
+            if priority is not None:
+                task.priority = priority
+            if tags is not None:
+                task.setTags(_parse_tags(tags))
+            self.gtd.save(task)
+            print u'Task %s was updated' % task
 
     def cmd_close(self, task_id):
         self.gtd.closeTask(int(task_id))
