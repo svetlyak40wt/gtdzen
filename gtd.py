@@ -68,9 +68,10 @@ class CommandUI:
             self.gtd.save(task)
             print u'Task %s was updated' % task
 
-    def cmd_close(self, task_id):
-        self.gtd.closeTask(int(task_id))
-        print u'Task %s was closed' % task_id
+    def cmd_close(self, task_ids):
+        for task_id in _parse_ids(task_ids):
+            self.gtd.closeTask(task_id)
+            print u'Task %s was closed' % task_id
 
 
     def cmd_help(self, *args):
