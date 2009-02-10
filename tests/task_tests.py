@@ -111,3 +111,19 @@ class TaskTests(TestCase):
         self.assertEqual(u'work',       task.tags[0].title)
         self.assertEqual(u'about hour', task.tags[1].title)
 
+    def testCloseTask(self):
+        task1 = self.gtd.addTask(title = u'First', priority = 10)
+        task2 = self.gtd.addTask(title = u'Second', priority = 1)
+
+        self.assertEqual(2, len(self.gtd.getTasks()))
+        self.gtd.closeTask(task1.id)
+
+        tasks = self.gtd.getTasks()
+        self.assertEqual(1, len(tasks))
+        self.assertEqual(u'Second', tasks[0].title)
+
+        tasks = self.gtd.getTasks(show_closed = True)
+        self.assertEqual(2, len(tasks))
+        self.assertEqual(u'First',  tasks[0].title)
+        self.assertEqual(u'Second', tasks[1].title)
+

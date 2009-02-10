@@ -28,13 +28,16 @@ class GTD(object):
     def getTaskById(self, task_id):
         return Task.query.get(task_id)
 
-    def getTasks(self, tags = []):
+    def getTasks(self, tags = [], show_closed = False):
         tags = make_list(tags)
         query = Task.query
 
         if len(tags) > 0:
             for tag in tags:
                 query = query.filter(Task.tags.any(title = tag))
+
+        if not show_closed:
+            query = query.filter_by(done = False)
 
         return query.all()
 
@@ -61,6 +64,11 @@ class GTD(object):
         '''Updates object and commit session.'''
         obj.update()
         session.commit()
+
+    def closeTask(self, task_id):
+        task = self.getTaskById(task_id)
+        task.done = True
+        self.save(task)
 
     def _createTags(self, tags):
         return [get_or_create(Tag, title = tag) for tag in tags]
