@@ -40,7 +40,8 @@ class CommandUI:
         print u'Task %s was added' % task
 
     def cmd_show(self, tags = u''):
-        tasks = self.gtd.getTasks(_parse_tags(tags))
+        with_tags, without_tags = _add_remove_tags(_parse_tags(tags))
+        tasks = self.gtd.getTasks(tags = with_tags, without_tags = without_tags)
         if len(tasks) > 0:
             for task in tasks:
                 print u'%d %s' % (task.id, task)

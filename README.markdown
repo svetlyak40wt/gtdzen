@@ -16,7 +16,6 @@ TODO
 
 * setup.py script.
 * task annotations.
-* negation operand for getTasks.
 * help for command line interface.
 * automatic database migrations.
 * import/export to/from some XML format.

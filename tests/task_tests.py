@@ -41,15 +41,6 @@ class TaskTests(TestCase):
         self.assertEqual([], task1.tags)
         self.assertEqual([], task2.tags)
 
-    def testGetTasks(self):
-        task1 = self.gtd.addTask(title = u'First',  priority = 1)
-        task2 = self.gtd.addTask(title = u'Second', priority = 2)
-
-        tasks = self.gtd.getTasks()
-        self.assertEqual(2, len(tasks))
-        self.assertEqual(task2, tasks[0])
-        self.assertEqual(task1, tasks[1])
-
     def testGetTags(self):
         self.gtd.addTask(title = u'First', tags = [u'one', u'two', u'three'])
 
@@ -100,6 +91,19 @@ class TaskTests(TestCase):
         self.assertEqual(1, len(tasks))
         self.assertEqual(task3, tasks[0])
 
+    def testGetTasksWithoutTags(self):
+        task1 = self.gtd.addTask(title = u'First',  tags = [u'home', u'1 minute'], priority = 1)
+        task2 = self.gtd.addTask(title = u'Second', tags = [u'work', u'1 minute'], priority = 5)
+        task3 = self.gtd.addTask(title = u'Third', tags = [u'work', u'long'], priority = 3)
+
+        tasks = self.gtd.getTasks(without_tags = u'1 minute')
+        self.assertEqual(1, len(tasks))
+        self.assertEqual(task3, tasks[0])
+
+        tasks = self.gtd.getTasks(tags = u'work', without_tags = u'long')
+        self.assertEqual(1, len(tasks))
+        self.assertEqual(task2, tasks[0])
+
     def testModify(self):
         task1 = self.gtd.addTask(title = u'First',  tags = [u'home', u'1 minute'], priority = 1)
         task1.priority = 5
@@ -126,4 +130,13 @@ class TaskTests(TestCase):
         self.assertEqual(2, len(tasks))
         self.assertEqual(u'First',  tasks[0].title)
         self.assertEqual(u'Second', tasks[1].title)
+
+    def testGetTasksNegation(self):
+        task1 = self.gtd.addTask(title = u'First',  priority = 1)
+        task2 = self.gtd.addTask(title = u'Second', priority = 2)
+
+        tasks = self.gtd.getTasks()
+        self.assertEqual(2, len(tasks))
+        self.assertEqual(task2, tasks[0])
+        self.assertEqual(task1, tasks[1])
 

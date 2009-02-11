@@ -28,13 +28,16 @@ class GTD(object):
     def getTaskById(self, task_id):
         return Task.query.get(task_id)
 
-    def getTasks(self, tags = [], show_closed = False):
-        tags = make_list(tags)
+    def getTasks(self, tags = [], without_tags = [], show_closed = False):
         query = Task.query
 
-        if len(tags) > 0:
-            for tag in tags:
-                query = query.filter(Task.tags.any(title = tag))
+        tags = make_list(tags)
+        for tag in tags:
+            query = query.filter(Task.tags.any(title = tag))
+
+        without_tags = make_list(without_tags)
+        for tag in without_tags:
+            query = query.filter(not_(Task.tags.any(title = tag)))
 
         if not show_closed:
             query = query.filter_by(done = False)
