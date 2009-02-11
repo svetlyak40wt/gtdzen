@@ -1,0 +1,8 @@
+alias gtd='./gtd.py'
+alias gtshow='gtd show'
+alias gtwork='gtd show today,work'
+alias gthome='gtd show today,home'
+alias gtlate='gtd show -today'
+alias gta='gtd add'
+alias gtdone='gtd close'
+alias gtu='gtd update'
