@@ -28,7 +28,7 @@ class CommandUI:
         self.gtd = gtdzen.GTD(database)
 
     def run(self, cmd_name, args):
-        method = getattr(self, 'cmd_%s' % cmd_name, self.cmd_help)
+        method = getattr(self, 'cmd_%s' % cmd_name.replace('-', '_'), self.cmd_help)
         return method(*args)
 
     def cmd_add(self, title, priority = 1, tags = u''):
@@ -39,14 +39,23 @@ class CommandUI:
         )
         print u'Task %s was added' % task
 
-    def cmd_show(self, tags = u''):
+    def cmd_show(self, tags = u'', mode = 'open'):
         with_tags, without_tags = _add_remove_tags(_parse_tags(tags))
-        tasks = self.gtd.getTasks(tags = with_tags, without_tags = without_tags)
+        tasks = self.gtd.getTasks(
+                    tags = with_tags,
+                    without_tags = without_tags,
+                    show = mode)
         if len(tasks) > 0:
             for task in tasks:
                 print u'%d %s' % (task.id, task)
         else:
             print u'No tasks'
+
+    def cmd_show_closed(self, *args, **kwargs):
+        return self.cmd_show(mode = 'closed', *args, **kwargs)
+
+    def cmd_show_all(self, *args, **kwargs):
+        return self.cmd_show(mode = 'all', *args, **kwargs)
 
     def cmd_update(self, task_ids, title = None, priority = None, tags = None):
         if tags is not None:

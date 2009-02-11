@@ -126,7 +126,7 @@ class TaskTests(TestCase):
         self.assertEqual(1, len(tasks))
         self.assertEqual(u'Second', tasks[0].title)
 
-        tasks = self.gtd.getTasks(show_closed = True)
+        tasks = self.gtd.getTasks(show = 'all')
         self.assertEqual(2, len(tasks))
         self.assertEqual(u'First',  tasks[0].title)
         self.assertEqual(u'Second', tasks[1].title)
@@ -139,4 +139,24 @@ class TaskTests(TestCase):
         self.assertEqual(2, len(tasks))
         self.assertEqual(task2, tasks[0])
         self.assertEqual(task1, tasks[1])
+
+    def testShowModes(self):
+        self.gtd.closeTask(self.gtd.addTask(title = u'Closed', priority = 10).id)
+        self.gtd.addTask(title = u'Open', priority = 1)
+
+        # by default, only 'open' tasks
+        tasks = self.gtd.getTasks()
+        self.assertEqual(1, len(tasks))
+        self.assertEqual(u'Open', tasks[0].title)
+
+        tasks = self.gtd.getTasks(show = 'all')
+        self.assertEqual(2, len(tasks))
+        self.assertEqual(u'Closed', tasks[0].title)
+        self.assertEqual(u'Open',   tasks[1].title)
+
+        tasks = self.gtd.getTasks(show = 'closed')
+        self.assertEqual(1, len(tasks))
+        self.assertEqual(u'Closed', tasks[0].title)
+
+        self.assertRaises(AssertionError, self.gtd.getTasks, show = 'bad-mode')
 

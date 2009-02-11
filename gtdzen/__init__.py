@@ -28,7 +28,8 @@ class GTD(object):
     def getTaskById(self, task_id):
         return Task.query.get(task_id)
 
-    def getTasks(self, tags = [], without_tags = [], show_closed = False):
+    def getTasks(self, tags = [], without_tags = [], show = 'open'):
+        assert(show in ('all', 'open', 'closed'))
         query = Task.query
 
         tags = make_list(tags)
@@ -39,8 +40,8 @@ class GTD(object):
         for tag in without_tags:
             query = query.filter(not_(Task.tags.any(title = tag)))
 
-        if not show_closed:
-            query = query.filter_by(done = False)
+        if show != 'all':
+            query = query.filter_by(done = (show == 'closed'))
 
         return query.all()
 
