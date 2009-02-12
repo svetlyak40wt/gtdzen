@@ -1,4 +1,4 @@
-alias gtd='./gtd.py'
+alias gtd='./gtd'
 alias gtshow='gtd show'
 alias gtwork='gtd show today,work'
 alias gthome='gtd show today,home'

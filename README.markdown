@@ -1,19 +1,27 @@
 GTDzen
-------
+======
 
 This is a simple but flexible library and application to realize [Getting Things Done][gtd] method by David Allen.
 
 GTDzen is based on a simplicity, so you'll not find any projects, contexts or areas of responsibility. I'm sure,
 that all you need is smart tagging and correct priorities, I call it - "Tagged GTD Workflow".
 
+Installation
+------------
+
+First of all, you need to install all requirements. Next, you can install gtdzen.
+
+If you install from the source, run `python setup.py install`.
+
+If you wish to install from the PyPi, use `easy_install gtdzen` or `pip install gtdzen`.
+
 Tutorial
-========
+--------
 
 There is only command line interface right now. But I'll be happy if somebody helps me to build a GUI for Mac OS X.
 
 I use such aliases in the ZSH/BASH:
 
-    alias gtd='./gtd.py'
     alias gtshow='gtd show'
     alias gtwork='gtd show today,work'
     alias gthome='gtd show today,home'
@@ -64,13 +72,17 @@ The command 'gtd update' accepts almost the same parameters as 'gtd add' command
 Ok, it's all. Have a fun and build your own tagged GTD workflow.
 
 TODO
-====
+----
 
-* setup.py script.
 * task annotations.
 * help for command line interface.
 * automatic database migrations.
 * import/export to/from some XML format.
+
+License
+-------
+
+This code is licensed under the New BSD License. See more details in the LICENSE file.
 
 Contacts
 --------

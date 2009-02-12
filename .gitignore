@@ -3,3 +3,6 @@
 *.sqlite*
 .vim
 ctags
+MANIFEST
+dist
+build
