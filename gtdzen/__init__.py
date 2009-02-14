@@ -5,7 +5,7 @@ from sqlalchemy.sql import not_
 from utils import get_or_create, make_list
 from pdb import set_trace
 
-__version__ = '0.1.0'
+__version__ = '0.1.1'
 
 class GTD(object):
     def __init__(self, filename):
