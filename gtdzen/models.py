@@ -32,3 +32,11 @@ class Tag(Entity):
     def __repr__(self):
         return u'<Tag "%s">' % self.title
 
+    @property
+    def open_tasks(self):
+        return [t for t in self.tasks if not t.done]
+
+    @property
+    def closed_tasks(self):
+        return [t for t in self.tasks if t.done]
+

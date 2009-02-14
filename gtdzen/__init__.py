@@ -48,6 +48,15 @@ class GTD(object):
     def getTags(self):
         return Tag.query.all()
 
+    def deleteTag(self, tag):
+        """Delete tag by id or name"""
+        if isinstance(tag, basestring):
+            tag = Tag.query.filter_by(title = tag).one()
+        else:
+            tag = Tag.query.filter_by(id = tag).one()
+        tag.delete()
+        session.commit()
+
     def getTagsRelated(self, tags):
         tags = make_list(tags)
 

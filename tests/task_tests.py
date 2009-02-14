@@ -160,3 +160,21 @@ class TaskTests(TestCase):
 
         self.assertRaises(AssertionError, self.gtd.getTasks, show = 'bad-mode')
 
+    def testDeleteTag(self):
+        task = self.gtd.addTask(title = u'First', tags = [u'one', u'two', u'three'])
+
+        self.gtd.deleteTag(u'two')
+        tags = self.gtd.getTags()
+
+        self.assertEqual(2, len(tags))
+        self.assertEqual(2, len(self.gtd.getTaskById(task.id).tags))
+
+        next_tag = tags[0]
+        remaining_tag = tags[1]
+        self.gtd.deleteTag(next_tag.id)
+
+        tags = self.gtd.getTags()
+        self.assertEqual(1, len(tags))
+        self.assertEqual(1, len(self.gtd.getTaskById(task.id).tags))
+        self.assertEqual(remaining_tag, tags[0])
+
