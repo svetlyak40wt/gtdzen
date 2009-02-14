@@ -50,7 +50,21 @@ class CommandUI:
         else:
             print u'No tags'
 
+    def cmd_active_tags(self):
+        """Shows tags which have open tasks."""
+
+        tags = [t for t in self.gtd.getTags() if len(t.open_tasks) > 0]
+        if len(tags) > 0:
+            for tag in tags:
+                print u'%d\t%s (%d)' % (
+                        tag.id, tag,
+                        len(tag.open_tasks))
+        else:
+            print u'No tags'
+
     def cmd_del_tag(self, tag_ids):
+        """Show all tags with open/closed tasks count."""
+
         for tag_id in _parse_ids(tag_ids):
             self.gtd.deleteTag(tag_id)
         print u'These tags were deleted'
