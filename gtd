@@ -37,7 +37,7 @@ class CommandUI:
             priority=int(priority),
             tags = _parse_tags(tags),
         )
-        print u'Task %s was added' % task
+        print u'Task %s was added with id %d' % (task, task.id)
 
     def cmd_tags(self):
         tags = self.gtd.getTags()
