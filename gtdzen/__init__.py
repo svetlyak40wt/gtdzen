@@ -1,3 +1,7 @@
+# This code is licensed under the New BSD License
+# 2009, Alexander Artemenko <svetlyak.40wt@gmail.com>
+# For other contacts, visit http://aartemenko.com
+
 import os
 from models import *
 from elixir import metadata, setup_all, create_all, session
