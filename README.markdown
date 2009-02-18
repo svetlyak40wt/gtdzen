@@ -74,9 +74,8 @@ Ok, it's all. Have a fun and build your own tagged GTD workflow.
 TODO
 ----
 
-* task annotations.
-* help for command line interface.
 * automatic database migrations.
+* task annotations.
 * import/export to/from some XML format.
 
 License

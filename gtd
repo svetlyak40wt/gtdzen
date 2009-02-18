@@ -15,17 +15,37 @@ def _comma_split(string):
 _parse_tags = _comma_split
 
 def _add_remove_tags(tags):
-    '''This method returns separates tags in two lists.
-       First list contains only those tags with simple names
-       or names with '+' prefix. Second list contains only
-       tags with '-' prefix. Prefixes are stripped.'''
+    """This method returns separates tags in two lists.
+    First list contains only those tags with simple names
+    or names with '+' prefix. Second list contains only
+    tags with '-' prefix. Prefixes are stripped.
+
+    >>> _add_remove_tags( [ '+a', 'a+', 'b', '-c', 'c-' ] )
+    ([\'a\', \'a+\', \'b\', \'c-\'], [\'c\'])
+    >>> _add_remove_tags( [] )
+    ([], [])
+    >>> _add_remove_tags( [ '' ] )
+    Traceback (most recent call last):
+    ...
+    IndexError: string index out of range
+    """
     return [t.lstrip('+') for t in tags if t[0] != '-'], \
            [t.lstrip('-') for t in tags if t[0] == '-']
 
 def _parse_ids(ids):
+    """
+    >>> _parse_ids( '1, 2' )
+    [1, 2]
+    >>> _parse_ids( '1' )
+    [1]
+    """
     return map(int, _comma_split(ids))
 
 def _process_args(args):
+    """
+    >>> _process_args( [ '-', 'bar', '-' ])
+    [None, u'bar', None]
+    """
     return [(arg != '-' and arg or None) for arg in (arg.decode('utf-8') for arg in args)]
 
 class CommandUI:
@@ -33,10 +53,15 @@ class CommandUI:
         self.gtd = gtdzen.GTD(database)
 
     def run(self, cmd_name, args):
-        method = getattr(self, 'cmd_%s' % cmd_name.replace('-', '_'), self.cmd_help)
+        method = getattr(self, 'cmd_%s'%
+                         cmd_name.replace('-', '_'), None)
+        if method is None:
+            raise Exception('Command "%s" not found.' % cmd_name)
         return method(*args)
 
     def cmd_add(self, title, priority = 1, tags = u''):
+        "Add a new task with title, priority and tags."
+
         task = self.gtd.addTask(
             title=title,
             priority=int(priority),
@@ -45,6 +70,8 @@ class CommandUI:
         print u'Task %s was added with id %d' % (task, task.id)
 
     def cmd_tags(self):
+        "Show all tags with number of open/closed tasks."
+
         tags = self.gtd.getTags()
         if len(tags) > 0:
             for tag in tags:
@@ -56,7 +83,7 @@ class CommandUI:
             print u'No tags'
 
     def cmd_active_tags(self):
-        """Shows tags which have open tasks."""
+        "Show only tags with open tasks."
 
         tags = [t for t in self.gtd.getTags() if len(t.open_tasks) > 0]
         if len(tags) > 0:
@@ -68,13 +95,15 @@ class CommandUI:
             print u'No tags'
 
     def cmd_del_tag(self, tag_ids):
-        """Show all tags with open/closed tasks count."""
+        "Delete tag by id (comma-separated list can be passed to remove many tags)."
 
         for tag_id in _parse_ids(tag_ids):
             self.gtd.deleteTag(tag_id)
         print u'These tags were deleted'
 
     def cmd_show(self, tags = u'', mode = 'open'):
+        "Show tasks, filtered by tags."
+
         with_tags, without_tags = _add_remove_tags(_parse_tags(tags))
         tasks = self.gtd.getTasks(
                     tags = with_tags,
@@ -87,12 +116,16 @@ class CommandUI:
             print u'No tasks'
 
     def cmd_show_closed(self, *args, **kwargs):
+        "Show closed tasks with given tags."
         return self.cmd_show(mode = 'closed', *args, **kwargs)
 
     def cmd_show_all(self, *args, **kwargs):
+        "Show open and closed tasks with given tags."
         return self.cmd_show(mode = 'all', *args, **kwargs)
 
     def cmd_update(self, task_ids, title = None, priority = None, tags = None):
+        "Update task or tasks and change title, priority or tags."
+
         if tags is not None:
             add_tags, remove_tags = _add_remove_tags(_parse_tags(tags))
 
@@ -114,20 +147,69 @@ class CommandUI:
             print u'Task %s was updated' % task
 
     def cmd_close(self, task_ids):
+        "Close task or tasks."
+
         for task_id in _parse_ids(task_ids):
             self.gtd.closeTask(task_id)
             print u'Task %s was closed' % task_id
 
+    def cmd_test(self):
+        "Doctests the program. Outputs nothing if all tests pass"
 
-    def cmd_help(self, *args):
-        print u'GTDzen, version %s' % gtdzen.__version__
-        print u'Usage: %s <command> [params...]' % sys.argv[0]
+        import doctest
+        doctest.testmod()
 
 
 if __name__ == '__main__':
-    cmd = len(sys.argv) > 1 and sys.argv[1] or ''
-    args = len(sys.argv) > 1 and sys.argv[2:] or []
+    import logging
+    from optparse import OptionParser
 
-    ui = CommandUI(os.path.expanduser(u'~/todo.sqlite'))
+    command_list = []
+    command_help = {}
+
+    for key in dir(CommandUI):
+        if key.startswith( 'cmd' ):
+            pname = key.split('_', 1)[-1]
+            command_list.append(pname)
+            command_help[pname] = getattr(CommandUI, key).__doc__
+
+    usage="""%%prog <command> [params...]
+
+Allowed commands:\n%s""" % '\n'.join(
+    '  %s\n    : %s' % (cmd, command_help[cmd]) for cmd in command_list)
+
+    parser = OptionParser( usage=usage,
+                           version='GTDZen, version is %s.' % gtdzen.__version__ )
+
+    parser.add_option( "-v", "--verbose", dest="verbose",
+                       action="store_true", default=False,
+                       help="Turns on verbosity of the program" )
+
+    (options, argv) = parser.parse_args()
+
+    loglevel = logging.FATAL
+    if options.verbose:
+        loglevel = logging.DEBUG
+
+    logging.basicConfig( level = loglevel,
+                    format = '%(asctime)s %(levelname)s %(message)s' )
+    log = logging.getLogger()
+
+    log.debug( "argv=%s"%( argv ) )
+
+    cmd = len( argv ) > 0 and argv[0] or None
+    args = len( argv ) > 0 and argv[1:] or []
+
+    log.debug( "length of args=%s"%( len( args ) ) )
+    log.debug( "cmd=%s"%( cmd ) )
+    log.debug( "args=%s"%( args ) )
+
+    if cmd not in command_list:
+        parser.print_help()
+        sys.exit(1)
+
+    database = os.path.expanduser(u'~/todo.sqlite')
+
+    ui = CommandUI( database )
     ui.run(cmd, _process_args(args))
 
