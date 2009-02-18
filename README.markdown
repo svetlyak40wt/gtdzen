@@ -75,6 +75,8 @@ TODO
 ----
 
 * automatic database migrations.
+* config file with basic options (where to store database, for example).
+* bash/zsh autocomplete.
 * task annotations.
 * import/export to/from some XML format.
 
