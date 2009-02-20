@@ -163,6 +163,7 @@ class CommandUI:
 if __name__ == '__main__':
     import logging
     from optparse import OptionParser
+    from itertools import takewhile
 
     command_list = []
     command_help = {}
@@ -185,7 +186,8 @@ Allowed commands:\n%s""" % '\n'.join(
                        action="store_true", default=False,
                        help="Turns on verbosity of the program" )
 
-    (options, argv) = parser.parse_args()
+    args_before_command = list(takewhile(lambda x: x not in command_list, sys.argv))
+    (options, argv) = parser.parse_args(args_before_command)
 
     loglevel = logging.FATAL
     if options.verbose:
@@ -197,8 +199,13 @@ Allowed commands:\n%s""" % '\n'.join(
 
     log.debug( "argv=%s"%( argv ) )
 
-    cmd = len( argv ) > 0 and argv[0] or None
-    args = len( argv ) > 0 and argv[1:] or []
+    len_before = len(args_before_command)
+    if len_before < len(sys.argv):
+        cmd = sys.argv[len_before]
+        args = sys.argv[len_before+1:]
+    else:
+        cmd = None
+        args = []
 
     log.debug( "length of args=%s"%( len( args ) ) )
     log.debug( "cmd=%s"%( cmd ) )
