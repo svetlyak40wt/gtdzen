@@ -135,6 +135,13 @@ class TaskTests(TestCase):
         self.assertEqual(u'First',  tasks[0].title)
         self.assertEqual(u'Second', tasks[1].title)
 
+    def testDeleteTask(self):
+        task1 = self.gtd.addTask(title = u'First', priority = 10)
+
+        self.assertEqual(1, len(self.gtd.getTasks(show = 'all')))
+        self.gtd.deleteTask(task1.id)
+        self.assertEqual(0, len(self.gtd.getTasks(show = 'all')))
+
     def testGetTasksNegation(self):
         task1 = self.gtd.addTask(title = u'First',  priority = 1)
         task2 = self.gtd.addTask(title = u'Second', priority = 2)

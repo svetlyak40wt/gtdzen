@@ -153,6 +153,20 @@ class CommandUI:
             self.gtd.closeTask(task_id)
             print u'Task %s was closed' % task_id
 
+    def cmd_del_task(self, task_ids):
+        "Close task or tasks."
+
+        for task_id in _parse_ids(task_ids):
+            task = self.gtd.getTaskById(task_id)
+            if task is None:
+                print 'Task %d not found.' % task_id
+                continue
+
+            yes_no = raw_input((u'Do you really want to delete task "%s"?\nAnswer "yes" or "no": ' % task.title).encode('utf-8'))
+            if yes_no == 'yes':
+                self.gtd.deleteTask(task_id)
+                print u'Task %s was deleted' % task_id
+
     def cmd_test(self):
         "Doctests the program. Outputs nothing if all tests pass"
 

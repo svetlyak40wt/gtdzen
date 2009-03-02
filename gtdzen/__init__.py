@@ -87,6 +87,11 @@ class GTD(object):
         task.done = True
         self.save(task)
 
+    def deleteTask(self, task_id):
+        task = self.getTaskById(task_id)
+        session.delete(task)
+        session.commit()
+
     def _createTags(self, tags):
         return [get_or_create(Tag, title = tag) for tag in tags]
 
