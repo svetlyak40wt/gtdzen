@@ -15,7 +15,7 @@ class Task(Entity):
 
     using_options(tablename='tasks', order_by='-priority')
 
-    def __str__(self):
+    def __unicode__(self):
         return u'"%s" / %s (%s)' % (self.title, self.priority, ', '.join(map(unicode, self.tags)))
 
     def __repr__(self):
@@ -30,7 +30,7 @@ class Tag(Entity):
 
     using_options(tablename='tags', order_by='title')
 
-    def __str__(self):
+    def __unicode__(self):
         return self.title
 
     def __repr__(self):

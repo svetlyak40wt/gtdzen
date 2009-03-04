@@ -6,8 +6,14 @@
 
 import sys
 import os
+import locale
 import gtdzen
 from pdb import set_trace
+
+_language, _encoding = locale.getdefaultlocale()
+
+def output(text):
+    print text.encode(_encoding)
 
 def _comma_split(string):
     return [s for s in (s.strip() for s in string.split(',')) if s]
@@ -67,7 +73,7 @@ class CommandUI:
             priority=int(priority),
             tags = _parse_tags(tags),
         )
-        print u'Task %s was added with id %d' % (task, task.id)
+        output(u'Task %s was added with id %d' % (task, task.id))
 
     def cmd_tags(self):
         "Show all tags with number of open/closed tasks."
@@ -75,12 +81,12 @@ class CommandUI:
         tags = self.gtd.getTags()
         if len(tags) > 0:
             for tag in tags:
-                print u'%d\t%s (%d/%d)' % (
+                output(u'%d\t%s (%d/%d)' % (
                         tag.id, tag,
                         len(tag.open_tasks),
-                        len(tag.closed_tasks))
+                        len(tag.closed_tasks)))
         else:
-            print u'No tags'
+            output(u'No tags')
 
     def cmd_active_tags(self):
         "Show only tags with open tasks."
@@ -88,18 +94,18 @@ class CommandUI:
         tags = [t for t in self.gtd.getTags() if len(t.open_tasks) > 0]
         if len(tags) > 0:
             for tag in tags:
-                print u'%d\t%s (%d)' % (
+                output(u'%d\t%s (%d)' % (
                         tag.id, tag,
-                        len(tag.open_tasks))
+                        len(tag.open_tasks)))
         else:
-            print u'No tags'
+            output(u'No tags')
 
     def cmd_del_tag(self, tag_ids):
         "Delete tag by id (comma-separated list can be passed to remove many tags)."
 
         for tag_id in _parse_ids(tag_ids):
             self.gtd.deleteTag(tag_id)
-        print u'These tags were deleted'
+        output(u'These tags were deleted')
 
     def cmd_show(self, tags = u'', mode = 'open'):
         "Show tasks, filtered by tags."
@@ -111,9 +117,9 @@ class CommandUI:
                     show = mode)
         if len(tasks) > 0:
             for task in tasks:
-                print u'%d %s' % (task.id, task)
+                output(u'%d %s' % (task.id, task))
         else:
-            print u'No tasks'
+            output(u'No tasks')
 
     def cmd_show_closed(self, *args, **kwargs):
         "Show closed tasks with given tags."
@@ -144,14 +150,14 @@ class CommandUI:
                 task.setTags(new_tags)
 
             self.gtd.save(task)
-            print u'Task %s was updated' % task
+            output(u'Task %s was updated' % task)
 
     def cmd_close(self, task_ids):
         "Close task or tasks."
 
         for task_id in _parse_ids(task_ids):
             self.gtd.closeTask(task_id)
-            print u'Task %s was closed' % task_id
+            output(u'Task %s was closed' % task_id)
 
     def cmd_del_task(self, task_ids):
         "Close task or tasks."
@@ -159,13 +165,13 @@ class CommandUI:
         for task_id in _parse_ids(task_ids):
             task = self.gtd.getTaskById(task_id)
             if task is None:
-                print 'Task %d not found.' % task_id
+                output('Task %d not found.' % task_id)
                 continue
 
             yes_no = raw_input((u'Do you really want to delete task "%s"?\nAnswer "yes" or "no": ' % task.title).encode('utf-8'))
             if yes_no == 'yes':
                 self.gtd.deleteTask(task_id)
-                print u'Task %s was deleted' % task_id
+                output(u'Task %s was deleted' % task_id)
 
     def cmd_test(self):
         "Doctests the program. Outputs nothing if all tests pass"
