@@ -7,7 +7,10 @@
 import sys
 import os
 import locale
+import shutil
 import gtdzen
+from ConfigParser import ConfigParser
+from datetime import date
 from pdb import set_trace
 
 _language, _encoding = locale.getdefaultlocale()
@@ -179,6 +182,26 @@ class CommandUI:
         import doctest
         doctest.testmod()
 
+class Config(ConfigParser):
+    def __init__(self, config_filename):
+        ConfigParser.__init__(self)
+
+        self.add_section('gtd')
+        self.set('gtd', 'database', u'~/.gtd/todo.sqlite')
+        self.set('gtd', 'backup', u'false')
+        self.set('gtd', 'backup_dir', u'~/.gtd/backups')
+
+        self.read(os.path.expanduser(config_filename))
+
+def backup_database(path_to_db, path_to_backups):
+    if os.path.exists(path_to_db):
+        if not os.path.exists(path_to_backups):
+            os.makedirs(path_to_backups)
+
+        backup_file = os.path.join(path_to_backups, '%s.sqlite' % date.today())
+        if not os.path.exists(backup_file):
+            output(u'Writing backup to %s' % backup_file)
+            shutil.copy2(path_to_db, backup_file)
 
 if __name__ == '__main__':
     import logging
@@ -202,6 +225,9 @@ Allowed commands:\n%s""" % '\n'.join(
     parser = OptionParser( usage=usage,
                            version='GTDZen, version is %s.' % gtdzen.__version__ )
 
+    parser.add_option( "-c", "--config", dest="config",
+                       default=u'~/.gtdrc',
+                       help="Turns on verbosity of the program" )
     parser.add_option( "-v", "--verbose", dest="verbose",
                        action="store_true", default=False,
                        help="Turns on verbosity of the program" )
@@ -235,7 +261,12 @@ Allowed commands:\n%s""" % '\n'.join(
         parser.print_help()
         sys.exit(1)
 
-    database = os.path.expanduser(u'~/todo.sqlite')
+    config = Config(options.config)
+    database = os.path.expanduser(config.get('gtd', 'database'))
+
+    if config.getboolean('gtd', 'backup'):
+        backup_dir = os.path.expanduser(config.get('gtd', 'backup_dir'))
+        backup_database(database, backup_dir)
 
     ui = CommandUI( database )
     ui.run(cmd, _process_args(args))

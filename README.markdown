@@ -71,6 +71,26 @@ The command 'gtd update' accepts almost the same parameters as 'gtd add' command
 
 Ok, it's all. Have a fun and build your own tagged GTD workflow.
 
+Configuration
+-------------
+
+You can specify some configuration options through 'config' file.
+
+By default, 'gtd' searches options in ~/.gtdrc file, but for can specify
+another location, using command line argument --config.
+
+Here is default config with some comments:
+
+    [gtd]
+    # Path to database
+    database = ~/.gtd/todo.sqlite
+    
+    # Enable or disable daily backups
+    backup = false
+    
+    # Where to place backup
+    backup_dir = ~/.gtd/backups
+
 TODO
 ----
 
