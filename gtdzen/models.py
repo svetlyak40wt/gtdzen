@@ -7,11 +7,11 @@ from utils import get_or_create
 from pdb import set_trace
 
 class Task(Entity):
-    title = Field(Unicode(40))
+    title = Field(Unicode(40), required = True)
     note = Field(UnicodeText)
     tags = ManyToMany('Tag')
-    priority = Field(Float)
-    done = Field(Boolean, default = False)
+    priority = Field(Float, default = 1, required = True)
+    done = Field(Boolean, default = False, required = True)
 
     using_options(tablename='tasks', order_by='-priority')
 
@@ -26,7 +26,7 @@ class Task(Entity):
         self.tags = [get_or_create(Tag, title = tag) for tag in tags]
 
 class Tag(Entity):
-    title = Field(Unicode(40), unique = True)
+    title = Field(Unicode(40), required = True, unique = True)
     tasks = ManyToMany('Task')
 
     using_options(tablename='tags', order_by='title')
