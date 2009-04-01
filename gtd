@@ -110,14 +110,20 @@ class CommandUI:
             self.gtd.deleteTag(tag_id)
         output(u'These tags were deleted')
 
-    def cmd_show(self, tags = u'', mode = 'open'):
-        "Show tasks, filtered by tags."
+    def cmd_show(self, param = u'', mode = 'open'):
+        "Show tasks by ids or filtered by tags."
 
-        with_tags, without_tags = _add_remove_tags(_parse_tags(tags))
-        tasks = self.gtd.getTasks(
-                    tags = with_tags,
-                    without_tags = without_tags,
-                    show = mode)
+        try:
+            if not param:
+                raise ValueError
+            tasks = [self.gtd.getTaskById(task_id) for task_id in _parse_ids(param)]
+        except ValueError:
+            with_tags, without_tags = _add_remove_tags(_parse_tags(param))
+            tasks = self.gtd.getTasks(
+                        tags = with_tags,
+                        without_tags = without_tags,
+                        show = mode)
+
         if len(tasks) > 0:
             for task in tasks:
                 output(u'%d %s' % (task.id, task))

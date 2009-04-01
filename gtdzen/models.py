@@ -16,7 +16,8 @@ class Task(Entity):
     using_options(tablename='tasks', order_by='-priority')
 
     def __unicode__(self):
-        return u'"%s" / %s (%s)' % (self.title, self.priority, ', '.join(map(unicode, self.tags)))
+        return u'"%s" / %s %s (%s)' % (
+            self.title, self.priority, self.done and 'CLOSED' or 'OPEN', ', '.join(map(unicode, self.tags)))
 
     def __repr__(self):
         return u'<Task "%s" with tags %s>' % (self.title, ', '.join(map(unicode, self.tags)))
