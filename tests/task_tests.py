@@ -6,6 +6,7 @@ import os
 from pdb import set_trace
 from unittest import TestCase
 from gtdzen import GTD
+from gtdzen.exceptions import *
 
 TEST_DB = 'testsuite.sqlite'
 
@@ -134,6 +135,9 @@ class TaskTests(TestCase):
         self.assertEqual(2, len(tasks))
         self.assertEqual(u'First',  tasks[0].title)
         self.assertEqual(u'Second', tasks[1].title)
+
+    def testCloseUnknown(self):
+        self.assertRaises(TaskNotFound, self.gtd.closeTask, 12345)
 
     def testDeleteTask(self):
         task1 = self.gtd.addTask(title = u'First', priority = 10)

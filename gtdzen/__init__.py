@@ -9,7 +9,10 @@ from sqlalchemy.sql import not_
 from utils import get_or_create, make_list
 from pdb import set_trace
 
+from exceptions import *
+
 __version__ = '0.1.1'
+__all__ = ['GTD']
 
 class GTD(object):
     def __init__(self, filename):
@@ -84,6 +87,9 @@ class GTD(object):
 
     def closeTask(self, task_id):
         task = self.getTaskById(task_id)
+        if task is None:
+            raise TaskNotFound
+
         task.done = True
         self.save(task)
 

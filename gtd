@@ -13,6 +13,8 @@ from ConfigParser import ConfigParser
 from datetime import date
 from pdb import set_trace
 
+from gtdzen.exceptions import *
+
 _language, _encoding = locale.getdefaultlocale()
 
 def output(text):
@@ -165,8 +167,11 @@ class CommandUI:
         "Close task or tasks."
 
         for task_id in _parse_ids(task_ids):
-            self.gtd.closeTask(task_id)
-            output(u'Task %s was closed' % task_id)
+            try:
+                self.gtd.closeTask(task_id)
+                output(u'Task %s was closed' % task_id)
+            except TaskNotFound:
+                output(u'Task %s not found' % task_id)
 
     def cmd_del_task(self, task_ids):
         "Close task or tasks."
