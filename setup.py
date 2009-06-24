@@ -2,7 +2,7 @@
 # 2009, Alexander Artemenko <svetlyak.40wt@gmail.com>
 # For other contacts, visit http://aartemenko.com
 
-from distutils.core import setup
+from setuptools import setup, find_packages
 
 setup(
     name = 'gtdzen',
@@ -14,7 +14,7 @@ setup(
     license = 'New BSD License',
     keywords = 'GTD, TODO, time management',
     url = 'http://github.com/svetlyak40wt/gtdzen/',
-    packages = ['gtdzen'],
+    packages = find_packages(),
     scripts = ['gtd'],
     classifiers = [
         'Development Status :: 3 - Alpha',
@@ -29,7 +29,7 @@ setup(
         'Topic :: Office/Business :: Scheduling',
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
-    requires = [
+    install_requires = [
         'SQLAlchemy',
         'Elixir',
     ],
