@@ -40,7 +40,7 @@ setup(
         'Elixir',
         'sqlalchemy-migrate',
     ],
-    tests_require = ['nose >= 0.10']
+    tests_require = ['nose >= 0.10'],
     entry_points = """
         [console_scripts]
         gtd = gtdzen.client:main
