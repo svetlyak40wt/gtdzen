@@ -214,7 +214,7 @@ def backup_database(path_to_db, path_to_backups):
             output(u'Writing backup to %s' % backup_file)
             shutil.copy2(path_to_db, backup_file)
 
-if __name__ == '__main__':
+def main():
     import logging
     from optparse import OptionParser
     from itertools import takewhile
@@ -282,3 +282,5 @@ Allowed commands:\n%s""" % '\n'.join(
     ui = CommandUI( database )
     ui.run(cmd, _process_args(args))
 
+if __name__ == '__main__':
+    main()

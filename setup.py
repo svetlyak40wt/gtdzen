@@ -2,7 +2,12 @@
 # 2009, Alexander Artemenko <svetlyak.40wt@gmail.com>
 # For other contacts, visit http://aartemenko.com
 
-from setuptools import setup, find_packages
+try:
+    from setuptools import setup, find_packages
+except ImportError:
+    from ez_setup import use_setuptools
+    use_setuptools()
+    from setuptools import setup, find_packages
 
 setup(
     name = 'gtdzen',
@@ -36,5 +41,11 @@ setup(
         'Elixir',
         'sqlalchemy-migrate',
     ],
+    tests_require = ['nose >= 0.10']
+    entry_points = """
+        [console_scripts]
+        gtd = gtdzen.client:main
+        """,
+    test_suite = "nose.collector",
 )
 

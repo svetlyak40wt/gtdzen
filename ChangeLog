@@ -1,0 +1,20 @@
+GTDZen's changelog
+==================
+
+0.1.3
+-----
+
+* Added `nosetests` support for unittesting.
+* Added command line client was moved to gtdzen package and entrypoint was
+added to install correctly with pip and buildout.
+* Added ez_setup.py bootstrap script.
+
+0.1.2
+-----
+
+* Fixed installation issues, now package can be installed using usual
+`easy_install gtdzen` command.
+* Move to setuptools, now package has explicit dependencies from sqlalchemy,
+elixir and sqlalchemy-migrations.
+* Database migrations were moved to the main `gtdzen` package.
+
