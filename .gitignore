@@ -1,6 +1,7 @@
 *.pyc
 .*.swp
 *.sqlite*
+*.egg-info
 .vim
 ctags
 MANIFEST

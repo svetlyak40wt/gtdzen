@@ -1,3 +1,5 @@
 include README.markdown
 include LICENSE
+include ChangeLog
 include aliases
+recursive-include gtdzen/migrations/versions *.sql

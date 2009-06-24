@@ -15,6 +15,8 @@ setup(
     keywords = 'GTD, TODO, time management',
     url = 'http://github.com/svetlyak40wt/gtdzen/',
     packages = find_packages(),
+    include_package_data = True,
+    zip_safe = False,
     scripts = ['gtd'],
     classifiers = [
         'Development Status :: 3 - Alpha',
@@ -32,6 +34,7 @@ setup(
     install_requires = [
         'SQLAlchemy',
         'Elixir',
+        'sqlalchemy-migrate',
     ],
 )
 

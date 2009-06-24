@@ -8,19 +8,17 @@ import sys
 try:
     from elixir import metadata, setup_all, create_all, session
     from models import *
-except ImportError:
-    sys.stderr.write('error, Elixir not found')
-try:
     from sqlalchemy.sql import not_
 except ImportError:
-    sys.stderr.write('error, SQLAlchemy not found')
+    """Ignore this imports because they may fail
+       during __version__ import."""
 
 from utils import get_or_create, make_list
 from pdb import set_trace
 
 from exceptions import *
 
-__version__ = '0.1.1'
+__version__ = '0.1.2'
 __all__ = ['GTD']
 
 class GTD(object):

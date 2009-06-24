@@ -5,7 +5,8 @@
 
 from migrate.versioning.shell import main
 import os.path
+import gtdzen
 
 #db_url = 'sqlite:///' + os.path.expanduser('~/todo.sqlite')
 db_url = 'sqlite:///todo.sqlite'
-main(url=db_url,repository='migrations')
+main(url=db_url,repository=os.path.join(os.path.dirname(gtdzen.__file__), 'migrations'))
