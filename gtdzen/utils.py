@@ -2,9 +2,8 @@
 # 2009, Alexander Artemenko <svetlyak.40wt@gmail.com>
 # For other contacts, visit http://aartemenko.com
 
-from sqlalchemy.orm.exc import NoResultFound
-
 def get_or_create(model, **kwargs):
+    from sqlalchemy.orm.exc import NoResultFound
     try:
         return model.query.filter_by(**kwargs).one()
     except NoResultFound:
