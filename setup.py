@@ -22,7 +22,6 @@ setup(
     packages = find_packages(),
     include_package_data = True,
     zip_safe = False,
-    scripts = ['gtd'],
     classifiers = [
         'Development Status :: 3 - Alpha',
         'Environment :: Console',
