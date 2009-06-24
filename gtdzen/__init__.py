@@ -3,9 +3,18 @@
 # For other contacts, visit http://aartemenko.com
 
 import os
-from models import *
-from elixir import metadata, setup_all, create_all, session
-from sqlalchemy.sql import not_
+import sys
+
+try:
+    from elixir import metadata, setup_all, create_all, session
+    from models import *
+except ImportError:
+    sys.stderr.write('error, Elixir not found')
+try:
+    from sqlalchemy.sql import not_
+except ImportError:
+    sys.stderr.write('error, SQLAlchemy not found')
+
 from utils import get_or_create, make_list
 from pdb import set_trace
 
