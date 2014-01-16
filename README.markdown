@@ -114,3 +114,7 @@ Also, you can clone [this project at GitHub][at-github] and send me patches.
 
 [gtd]: http://en.wikipedia.org/wiki/GTD
 [at-github]: http://github.com/svetlyak40wt/gtdzen/
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/svetlyak40wt/gtdzen/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
